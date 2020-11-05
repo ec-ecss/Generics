@@ -1,0 +1,18 @@
+{
+  "name": "CaptainKant/Generics",
+  "type": "library",
+  "description": "Zero Dependencies Framework for legacy PHP",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Emmanuel Cervetti",
+      "role": "Developer"
+    }
+  ],
+  "version": "1.0.0",
+  "autoload": {
+    "psr-0" : {
+      "CaptainKant\\Generics" : "src"
+    }
+  }
+}
