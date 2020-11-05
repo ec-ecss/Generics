@@ -3,7 +3,6 @@
 namespace CaptainKant\Generics\Exceptions;
 
 use Exception;
-use LibXMLError;
 use Throwable;
 
 class GenericXmlStringHandlerException extends Exception
@@ -20,10 +19,4 @@ class GenericXmlStringHandlerException extends Exception
         parent::__construct($message, $code, $previous);
     }
 
-    public function getStrProblems()
-    {
-        implode(', ', array_map(function (LibXMLError $error) {
-            return $error->message;
-        }, libxml_get_errors()));
-    }
 }

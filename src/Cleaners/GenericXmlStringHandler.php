@@ -20,7 +20,7 @@ class GenericXmlStringHandler implements GenericAutowiringServiceInterface
     /**
      * @var string
      */
-    private $errors;
+    private $errors = '';
 
     /**
      * @return SimpleXMLElement|null
@@ -67,12 +67,11 @@ class GenericXmlStringHandler implements GenericAutowiringServiceInterface
     {
         libxml_use_internal_errors(false);
         libxml_use_internal_errors(true);
-        $this->errors = null;
         $tentativeXml = utf8_encode($tentativeXml);
         if ($this->sxDocument = @simplexml_load_string($tentativeXml)) {
             return $tentativeXml;
         }
-        $this->errors = implode(',', array_map(function (LibXMLError $error) {
+        $this->errors .= implode(',', array_map(function (LibXMLError $error) {
             return $error->message;
         }, libxml_get_errors()));
         return false;
@@ -110,11 +109,12 @@ class GenericXmlStringHandler implements GenericAutowiringServiceInterface
 
     /**
      * @param string|null $strXml
+     * @return string
      * @throws GenericXmlStringHandlerException
      */
     public function __invoke(string $strXml = null)
     {
-        $this->load($strXml);
+        return $this->load($strXml);
     }
 
 

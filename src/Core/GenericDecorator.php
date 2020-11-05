@@ -42,11 +42,7 @@ class GenericDecorator
         if (!$this->wasInvoked && method_exists($this->realInstance, '__invoke')) { //Auto Invoke
             $fct = new \ReflectionMethod($this->realInstance, '__invoke');
             if ($fct->getNumberOfRequiredParameters() === 0) {
-                try {
-                    call_user_func([$this->realInstance, '__invoke']);
-                } catch (Exception $e) {
-                    throw new Exception('Generic Decorator of ' . get_class($this->realInstance) . ' failed to __invoke .', 0, $e);
-                }
+                call_user_func([$this->realInstance, '__invoke']);
             }
         }
         return call_user_func_array([$this->realInstance, $method], $args);

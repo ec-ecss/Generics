@@ -17,7 +17,7 @@ class ClassTypageExample
      */
     private $testAlias;
     /**
-     * @var orusamu\oruna\Generics\Tests\Cleaners\Resources\ClassTypageExample
+     * @var CaptainKant\Generics\Tests\Cleaners\Resources\ClassTypageExample
      */
     private $testFullRootname;
 

@@ -16,7 +16,7 @@ class XmlStringHandlerTest extends TestCase
         $clean = '<?xml version = "1.0" encoding="UTF-8" standalone="yes" ?>
 <!DOCTYPE trsf_applisamu SYSTEM "E_QAexc.dtd">
 <trsf_applisamu type="1009" id="0" aefrom="aa" aedest="bb"><plugin pName="cc"><pCode></pCode></plugin></trsf_applisamu>';
-        self::assertEquals($cleaner->load(self::dirtyXmlAppligos($clean)), $clean);
+        self::assertEquals($cleaner->__invoke(self::dirtyXmlAppligos($clean)), $clean);
     }
 
     public function testErrorHandling()
@@ -24,7 +24,7 @@ class XmlStringHandlerTest extends TestCase
         $cleaner = GenericXmlStringHandler::getInstance();
         $wasException = false;
         try {
-            $cleaner->load("ceci n'est pas <dutout> du xml ");
+            $cleaner->__invoke("ceci n'est pas <dutout> du xml ");
         } catch (GenericXmlStringHandlerException $e) {
             $wasException = true;
             self::assertNotEquals('', $e->getMessage());
