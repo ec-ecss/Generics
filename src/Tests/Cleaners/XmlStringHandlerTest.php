@@ -44,6 +44,21 @@ Content-Disposition: attachment; name="trsf_applisamu"
 --------------------------27b4436c19689782--';
     }
 
+    public function testDirtyAmp()
+    {
+        $cleaner = GenericXmlStringHandler::getInstance();
+        self::assertEquals(self::cleanAmp(),$cleaner(self::dirtyAmp()));
+    }
+
+    static private function dirtyAmp() {
+        return '<root>aa & bb &amp; cc</root>';
+    }
+
+    static private function cleanAmp() {
+        return '<root>aa &amp; bb &amp; cc</root>';
+    }
+
+
 
 
 

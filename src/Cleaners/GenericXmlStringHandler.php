@@ -43,6 +43,7 @@ class GenericXmlStringHandler implements GenericAutowiringServiceInterface
      */
     public function load(string $strXml = null)
     {
+        $this->errors = '';
         if (false !== ($okXml = $this->loadXmlContents($strXml))) {
             return $strXml;
         } else if ($this->wasErrorNotUTF8()) {
@@ -55,7 +56,13 @@ class GenericXmlStringHandler implements GenericAutowiringServiceInterface
                 return $okXml;
             }
             throw new GenericXmlStringHandlerException($this->errors);
+        } else if ($this->wasUnterminatedEntity()) {
+            if (false !== ($okXml = $this->loadXmlContents($this->fixUnterminatedEntities($strXml)))) {
+                return $okXml;
+            }
+            throw new GenericXmlStringHandlerException($this->errors);
         }
+
         throw new GenericXmlStringHandlerException($this->errors);
     }
 
@@ -96,6 +103,11 @@ class GenericXmlStringHandler implements GenericAutowiringServiceInterface
         return false !== strpos((string)$this->errors, 'Start tag expected');
     }
 
+    private function wasUnterminatedEntity()
+    {
+        return false !== strpos((string)$this->errors, 'xmlParseEntityRef: no name');
+    }
+
     /**
      * @param $tentativeXml
      * @return string
@@ -106,6 +118,20 @@ class GenericXmlStringHandler implements GenericAutowiringServiceInterface
         $closingTagPos = strrpos($messageRaw, '>', -1);
         return substr($messageRaw, 0, $closingTagPos + 1);
     }
+
+    /**
+     * @param $tentativeXml
+     * @return string
+     */
+    private function fixUnterminatedEntities($tentativeXml)
+    {
+        $pattern = '/(&)([^amp;])/i';
+        $replacement = '&amp;$2';
+        return preg_replace($pattern, $replacement, $tentativeXml);
+    }
+
+
+
 
     /**
      * @param string|null $strXml
