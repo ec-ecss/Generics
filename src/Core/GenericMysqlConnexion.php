@@ -7,6 +7,7 @@ namespace CaptainKant\Generics\Core;
 use CaptainKant\Generics\Exceptions\GenericDatabaseException;
 use CaptainKant\Generics\Interfaces\GenericAutowiringServiceInterface;
 use CaptainKant\Generics\Traits\GenericAutowiringServiceTrait;
+use orusamu\oruna\GenericsETL\Exceptions\GenericEtlException;
 
 class GenericMysqlConnexion implements GenericAutowiringServiceInterface
 {
@@ -108,7 +109,9 @@ class GenericMysqlConnexion implements GenericAutowiringServiceInterface
     {
         mysqli_multi_query($this->ress, $sql);
         while (mysqli_more_results($this->ress)) {
-            mysqli_next_result($this->ress);
+            if(!mysqli_next_result($this->ress)) {
+                throw new GenericEtlException('SQL Error:'.mysqli_error($this->ress));
+            }
         }
     }
 
