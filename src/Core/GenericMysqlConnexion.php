@@ -109,9 +109,26 @@ class GenericMysqlConnexion implements GenericAutowiringServiceInterface
     {
         mysqli_multi_query($this->ress, $sql);
         while (mysqli_more_results($this->ress)) {
-            if(!mysqli_next_result($this->ress)) {
+            if(! mysqli_next_result($this->ress)) {
                 throw new GenericEtlException('SQL Error:'.mysqli_error($this->ress));
             }
+        }
+    }
+
+    /**
+     * @param string $sql
+     * @return \Generator|string[][]
+     * @throws GenericEtlException
+     */
+    public function executeSelect(string $sql)
+    {
+        if ($result = mysqli_query($this->ress, $sql)) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                yield $row ;
+            }
+            mysqli_free_result($result);
+        } else {
+            throw new GenericEtlException('SQL Error:'.mysqli_error($this->ress));
         }
     }
 
