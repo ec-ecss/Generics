@@ -12,23 +12,32 @@ class GenericArrayTest extends TestCase
     public function testTransfoRecursive()
     {
         $ob = new class {
-            public $a = 'gollum' ;
+            public $a = 'gollum';
+            public $b = null;
         };
 
 
         $a = [
-            1 => "gandalf" ,
-            'two' => 'frodo' ,
+            1 => "gandalf",
+            'two' => 'frodo',
             3 => $ob
-        ] ;
+        ];
 
-         GenericArray::transfoRecursive($a,function ($str){
+        GenericArray::transfoRecursive($a, function ($str) {
             return strtoupper($str);
         });
 
         $this->assertEquals('FRODO', $a['two']);
 
-        $this->assertEquals('GOLLUM',$a[3]->a);
+        $this->assertEquals('GOLLUM', $a[3]->a);
+
+        $ob->b = $ob;
+        GenericArray::transfoRecursive($a, function ($str) {
+            return strtoupper($str);
+        });
+
+        $this->assertEquals('GOLLUM', $a[3]->a);
+
 
     }
 }
