@@ -24,7 +24,7 @@ class GenericDecorator
         return new GenericDecorator($i);
     }
 
-    static public function redefineClass($file, $newClassName, $oldClassName = '')
+    static public function redefineClass($file, $newClassName, $oldClassName = '', $callableReplacements = null)
     {
         if ('' === $oldClassName) {
             preg_match('#.*/([A-Za-z0-9_]+)\.php#', $file, $tabPreg);
@@ -34,6 +34,9 @@ class GenericDecorator
         $contents = str_replace('<?php', '', $contents);
         $contents = str_replace('?>', '', $contents);
         $contents = str_replace($oldClassName, $newClassName, $contents);
+        if ($callableReplacements) {
+            $contents = $callableReplacements($contents);
+        }
         eval($contents);
     }
 
