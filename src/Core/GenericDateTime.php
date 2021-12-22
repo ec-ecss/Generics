@@ -11,11 +11,17 @@ class GenericDateTime extends \DateTime
 {
 
     static $mockedNow = null;
+    static $wasBooted = false;
     private $wasInstanciated = false;
 
     public function __construct($param)
     {
-
+        if (! self::$wasBooted ) {
+            if (file_exists('/etc/timezone')) {
+                date_default_timezone_set(rtrim(file_get_contents('/etc/timezone')));
+            }
+            self::$wasBooted = true ;
+        }
 
         if ($param == 'now' && self::$mockedNow) {
             $param = (string)self::$mockedNow->getDatetime();
