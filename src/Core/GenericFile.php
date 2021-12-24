@@ -33,6 +33,11 @@ class GenericFile
         return $tabPathInfo['extension'];
     }
 
+    public function isExtension($extension): bool
+    {
+        return strtoupper($extension) === strtoupper($this->getExtension());
+    }
+
     /**
      * @noinspection PhpUnused
      */
