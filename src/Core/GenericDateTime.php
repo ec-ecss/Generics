@@ -5,9 +5,14 @@ namespace CaptainKant\Generics\Core;
 
 
 use DateInterval;
+use DateTime;
 use Exception;
 
-class GenericDateTime extends \DateTime
+/**
+ * @noinspection PhpUnused
+ */
+
+class GenericDateTime extends DateTime
 {
 
     static $mockedNow = null;
@@ -16,11 +21,11 @@ class GenericDateTime extends \DateTime
 
     public function __construct($param)
     {
-        if (! self::$wasBooted ) {
+        if (!self::$wasBooted) {
             if (file_exists('/etc/timezone')) {
                 date_default_timezone_set(rtrim(file_get_contents('/etc/timezone')));
             }
-            self::$wasBooted = true ;
+            self::$wasBooted = true;
         }
 
         if ($param == 'now' && self::$mockedNow) {
@@ -28,7 +33,7 @@ class GenericDateTime extends \DateTime
         }
 
 
-        if ($param instanceof \DateTime) {
+        if ($param instanceof DateTime) {
             $param = $param->format('Y-m-d H:i:s');
         }
         if (is_string($param) &&
@@ -55,17 +60,21 @@ class GenericDateTime extends \DateTime
         parent::__construct($param);
     }
 
-    static function getTodayBegin()
+    /**
+     * @noinspection PhpUnused
+     * @throws Exception
+     */
+    static function getTodayBegin(): self
     {
         return self::getInstance(date('Y-m-d'));
     }
 
     /**
-     * @param string $str
+     * @noinspection PhpUnused
      * @return GenericDatetime|null
      * @throws Exception
      */
-    static public function getInstance($str = 'now')
+    static public function getInstance(string $str = 'now')
     {
         if (!$str)
             return null;
@@ -73,28 +82,28 @@ class GenericDateTime extends \DateTime
     }
 
     /**
-     * @return GenericDatetime
+     * @noinspection PhpUnused
      */
-    static public function getNow()
+    static public function getNow(): self
     {
         return new GenericDatetime("now");
     }
 
     /**
-     * @return GenericDatetime
+     * @noinspection PhpUnused
      * @throws Exception
      */
-    static public function getToday0H()
+    static public function getToday0H(): self
     {
         $date = new GenericDatetime("now");
         return $date->cloneAtZeroHour();
     }
 
     /**
-     * @return GenericDatetime
+     * @noinspection PhpUnused
      * @throws Exception
      */
-    public function cloneAtZeroHour()
+    public function cloneAtZeroHour(): self
     {
         $date = clone $this;
         $date->addHours(-$this->getHourInt());
@@ -103,17 +112,20 @@ class GenericDateTime extends \DateTime
         return $date;
     }
 
-    public function addHours($nbHours)
+    /**
+     * @noinspection PhpUnused
+     * @throws Exception
+     */
+    public function addHours(int $nbHours): self
     {
         return $this->addSeconds($nbHours * 3600);
     }
 
     /**
-     * @param $nbSeconds
-     * @return GenericDatetime
+     * @noinspection PhpUnused
      * @throws Exception
      */
-    public function addSeconds($nbSeconds)
+    public function addSeconds(int $nbSeconds): self
     {
         $intervall = new DateInterval('PT' . abs($nbSeconds) . 'S');
         if ($nbSeconds > 0) {
@@ -124,51 +136,74 @@ class GenericDateTime extends \DateTime
         return $this;
     }
 
-    public function getHourInt()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getHourInt(): int
     {
         return (int)$this->getHourTwoDigits();
     }
 
-    public function getHourTwoDigits()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getHourTwoDigits(): string
     {
         return $this->format("H");
     }
 
-    public function addMins($nbMins)
+    /**
+     * @noinspection PhpUnused
+     * @throws Exception
+     */
+    public function addMins(int $nbMins): self
     {
         return $this->addSeconds($nbMins * 60);
     }
 
-    public function getMinTwoDigits()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getMinTwoDigits(): string
     {
         return $this->format("i");
     }
 
-    public function getSecTwoDigits()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getSecTwoDigits(): string
     {
         return $this->format("s");
     }
 
-    static public function getInstanceNow()
+    /**
+     * @noinspection PhpUnused
+     * @throws Exception
+     */
+    static public function getInstanceNow(): self
     {
-        return self::getInstance('now');
+        return self::getInstance();
     }
 
+    /**
+     * @noinspection PhpUnused
+     */
     static public function mockNow(GenericDatetime $mockedNow)
     {
         self::$mockedNow = $mockedNow;
     }
 
     /**
-     * @return boolean
+     * @noinspection PhpUnused
      */
-    public function getWasInstanciated()
+    public function getWasInstanciated(): bool
     {
         if (!$this->wasInstanciated) {
             return false;
         }
 
-        if ($this->wasInstanciated && $this->getYear() == "-0001") {
+        if ($this->getYear() == "-0001") {
 
             return false;
         }
@@ -176,32 +211,40 @@ class GenericDateTime extends \DateTime
     }
 
     /**
-     * @param boolean $wasInstanciated
+     * @noinspection PhpUnused
      */
     public function setWasInstanciated(bool $wasInstanciated)
     {
         $this->wasInstanciated = $wasInstanciated;
     }
 
-    public function getYear()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getYear(): string
     {
         return $this->format("Y");
     }
 
-    public function getFirstDayMonth()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getFirstDayMonth(): self
     {
         return $this->getCloned()->addDays(1 - (int)$this->getDayTwoDigits());
     }
 
     /**
-     * @param $d
-     * @return $this
+     * @noinspection PhpUnused
      */
-    public function addDays($d)
+    public function addDays(int $d): self
     {
         return $this->addDay($d);
     }
 
+    /**
+     * @noinspection PhpUnused
+     */
     public function addDay(int $nbDays): GenericDatetime
     {
 
@@ -216,19 +259,25 @@ class GenericDateTime extends \DateTime
     }
 
     /**
-     * @return GenericDatetime
+     * @noinspection PhpUnused
      */
-    public function getCloned()
+    public function getCloned(): self
     {
         return clone $this;
     }
 
-    public function getDayTwoDigits()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getDayTwoDigits(): string
     {
         return $this->format("d");
     }
 
-    public function addMonth($num = 1)
+    /**
+     * @noinspection PhpUnused
+     */
+    public function addMonth(int $num = 1): self
     {
         $date = $this->format('Y-n-j');
         list($y, $m, $d) = explode('-', $date);
@@ -245,87 +294,124 @@ class GenericDateTime extends \DateTime
         return $this;
     }
 
-    public function getHourFloat()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getHourFloat(): float
     {
         return $this->getHourInt() + (((int)$this->getMinTwoDigits()) / 60);
     }
 
     /**
+     * @noinspection PhpUnused
      * Janvier = "01"
-     * @return string
      */
-    public function getMonthTwoDigits()
+    public function getMonthTwoDigits(): string
     {
         return $this->format("m");
     }
 
-    public function getSecDifference(GenericDatetime $date)
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getSecDifference(GenericDatetime $date): int
     {
         return $date->getTimestamp() - $this->getTimestamp();
     }
 
-    public function getStrDateTimeFr()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getStrDateTimeFr(): string
     {
         return $this->format('d/m/Y H:i');
     }
 
-    public function getDate()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getDate(): string
     {
         return $this->format('Y-m-d');
     }
 
-    public function getDateFr()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getDateFr(): string
     {
         return $this->format('d/m/Y');
     }
 
-    public function getTime()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getTime(): string
     {
         return $this->format('H:i:s');
     }
 
-    public function __toString()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function __toString(): string
     {
         return $this->getDatetime();
     }
 
-    public function getDatetime()
+    /**
+     * @noinspection PhpUnused
+     */
+    public function getDatetime(): string
     {
         return $this->format('Y-m-d H:i:s');
     }
 
-    public function isLaterThan(GenericDatetime $DateTime)
+    /**
+     * @noinspection PhpUnused
+     */
+    public function isLaterThan(GenericDatetime $DateTime): bool
     {
         return $this->getTimestamp() > $DateTime->getTimestamp();
     }
 
-    public function isLaterOrEqualThan(GenericDatetime $DateTime)
+    /**
+     * @noinspection PhpUnused
+     */
+    public function isLaterOrEqualThan(GenericDatetime $DateTime): bool
     {
         return $this->getTimestamp() >= $DateTime->getTimestamp();
     }
 
-    public function isEarlierOrEqualThan(GenericDatetime $DateTime)
+    /**
+     * @noinspection PhpUnused
+     */
+    public function isEarlierOrEqualThan(GenericDatetime $DateTime): bool
     {
         return $this->getTimestamp() < $DateTime->getTimestamp();
     }
 
 
     /**
-     * @param GenericDatetime $DateTime1
-     * @param GenericDatetime $DateTime2
-     * @return bool
+     * @noinspection PhpUnused
      */
-    public function isBetween(GenericDatetime $DateTime1, GenericDatetime $DateTime2)
+    public function isBetween(GenericDatetime $DateTime1, GenericDatetime $DateTime2): bool
     {
         return $this->isEarlierThan($DateTime2) && $DateTime1->isEarlierThan($this);
     }
 
-    public function isEarlierThan(GenericDatetime $DateTime)
+    /**
+     * @noinspection PhpUnused
+     */
+    public function isEarlierThan(GenericDatetime $DateTime): bool
     {
         return $this->getTimestamp() < $DateTime->getTimestamp();
     }
 
-    function isWeekEnd()
+    /**
+     * @noinspection PhpUnused
+     */
+    function isWeekEnd(): bool
     {
         if (6 == $this->format('w') || 0 == $this->format('w')) {
             return true;
@@ -334,11 +420,10 @@ class GenericDateTime extends \DateTime
     }
 
     /**
-     * Est-on dans un jour férié ?
-     * @return bool
+     * @noinspection PhpUnused
      * @throws Exception
      */
-    function isHoliday()
+    function isHoliday(): bool
     {
 
         $timestamp = $this->getTimestamp();
@@ -412,10 +497,9 @@ class GenericDateTime extends \DateTime
     }
 
     /**
-     * @param $nbDays
-     * @return GenericDatetime
+     * @noinspection PhpUnused
      */
-    public function cloneAddDays($nbDays)
+    public function cloneAddDays(int $nbDays): self
     {
         $date = clone $this;
         $date->addDay($nbDays);
@@ -424,10 +508,9 @@ class GenericDateTime extends \DateTime
 
     /**
      * Check if the current day is the same as the argument
-     * @param GenericDatetime $obDate
-     * @return bool
+     * @noinspection PhpUnused
      */
-    function isSameDay(GenericDatetime $obDate)
+    function isSameDay(GenericDatetime $obDate): bool
     {
         if (($this->getYear() == $obDate->getYear()) && ($this->getDayYear() == $obDate->getDayYear())) {
             return true;
@@ -435,22 +518,28 @@ class GenericDateTime extends \DateTime
         return false;
     }
 
-    /*@var $mockedNow GenericDatetime|null */
 
     /**
-     * @return int
+     * @noinspection PhpUnused
      */
-    function getDayYear()
+    function getDayYear(): int
     {
         return ((int)$this->format("z")) + 1;
     }
 
     /**
-     * @param $seconds
-     * @return $this
+     * @noinspection PhpUnused
+     */
+    public function getIso8601(): string
+    {
+        return $this->format(DateTime::ISO8601);
+    }
+
+    /**
+     * @noinspection PhpUnused
      * @throws Exception
      */
-    public function setSecondsTo($seconds)
+    public function setSecondsTo(int $seconds): self
     {
         $this->addSeconds(-(int)$this->getSecTwoDigits());
         $this->addSeconds($seconds);
