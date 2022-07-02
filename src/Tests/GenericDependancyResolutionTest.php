@@ -1,6 +1,6 @@
 <?php
 
-namespace CaptainKant\Generics\Patterns;
+namespace CaptainKant\Generics\Tests;
 
 use CaptainKant\Generics\Exceptions\GenericResolutionException;
 use PHPUnit\Framework\TestCase;

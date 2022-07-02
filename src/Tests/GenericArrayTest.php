@@ -1,7 +1,7 @@
 <?php
 
 
-namespace captainkant\generics\src\Tests;
+namespace CaptainKant\Generics\Tests;
 
 
 use CaptainKant\Generics\Patterns\GenericArray;
