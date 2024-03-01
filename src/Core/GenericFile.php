@@ -30,7 +30,11 @@ class GenericFile
     public function getExtension()
     {
         $tabPathInfo = pathinfo($this->filePath);
-        return $tabPathInfo['extension'];
+
+        if (isset($tabPathInfo['extension'])) {
+            return $tabPathInfo['extension'] ;
+        }
+        return '';
     }
 
     public function isExtension($extension): bool
